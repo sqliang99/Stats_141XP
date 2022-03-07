@@ -1,0 +1,80 @@
+---
+title: "Stats 141XP - Final Project"
+author: 'Anna Lee (UID: 505 088 325)'
+date: "2/8/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r prep}
+core17 <- read.csv("Core_2017.csv")
+core18 <- read.csv("Core_2018.csv")
+core19 <- read.csv("Core_2019.csv")
+
+orbitconj <- gsub("\\.", "", c("H05.00", "H05.20", "H05.21", "H05.211", "H05.212", "H05.213", "H05.219", "H05.22", "H05.221", "H05.222", "H05.223", "H05.229", "H05.23", "H05.231", "H05.232", "H05.233", "H05.239", "H05.24", "H05.241", "H05.242", "H05.243", "H05.249", "H05.34", "H05.341", "H05.342", "H05.343", "H05.349", "H05.89", "H05.9", "H01.8", "H01.9", "H02.84", "H02.841", "H02.842", "H02.843", "H02.844", "H02.845", "H02.846", "H02.849", "H02.89", "H02.9", "H11.42", "H11.421", "H11.422", "H11.423", "H11.429", "H11.43", "H11.431", "H11.432", "H11.433", "H11.439"))
+opticnerve <- gsub("\\.", "", c("H47.51", "H47.511", "H47.512", "H47.519", "H47.4", "H47.41"))
+eom <- gsub("\\.", "", c("H49", "H49.0", "H49.00", "H49.01", "H49.02", "H49.03", "H49.1", "H49.10", "H49.11", "H49.12", "H49.13", "H49.2", "H49.20", "H49.21", "H49.22", "H49.23", "H49.3", "H49.30", "H49.31", "H49.32", "H49.33", "H49.4", "H49.40", "H49.41", "H49.42", "H49.43"))
+binocular <- gsub("\\.", "", c("H51", "H51.0", "H51.1", "H51.11", "H51.12", "H51.2", "H51.20", "H51.21", "H51.22", "H51.23", "H51.8", "H51.9"))
+disturb <- gsub("\\.", "", c("H53.10", "H53.12", "H53.121", "H53.122", "H53.123", "H53.129", "H53.13", "H53.131", "H53.132", "H53.133", "H53.139", "H53.14", "H53.141", "H53.142", "H53.143", "H53.149", "H53.15", "H53.19", "H53.2", "H53.8", "H53.9", "H53.4", "H53.40", "H54.0", "H54.0X", "H54.0X3", "H54.0X33", "H54.0X34", "H54.0X35", "H54.0X4", "H54.0X43", "H54.0X44", "H54.0X45", "H54.0X5", "H54.0X53", "H54.0X54", "H54.0X55", "H54.1", "H54.10", "H54.11", "H54.113", "H54.1131", "H54.1132", "H54.114", "H54.1141", "H54.1142", "H54.115", "H54.1151", "H54.1152", "H54.12", "H54.121", "H54.1213", "H54.1214", "H54.1215", "H54.122", "H54.1223", "H54.1224", "H54.1225", "H54.2", "H54.2X", "H54.2X1", "H54.2X11", "H54.2X12", "H54.2X2", "H54.2X21", "H54.2X22", "H54.3", "H54.4", "H54.40", "H54.41", "H54.413", "H54.413A", "H54.414", "H54.414A", "H54.415", "H54.415A", "H54.42", "H54.42A", "H54.42A3", "H54.42A4", "H54.42A5", "H54.5", "H54.50", "H54.51", "H54.511", "H54.511A", "H54.512A", "H54.52", "H54.52A", "H54.52A1", "H54.52A2", "H54.6", "H54.60", "H54.61", "H54.62", "H54.7", "H57.1", "H57.10", "H57.11", "H57.12", "H57.13"))
+
+mucor <- c("B461", "B465")
+other <- c(orbitconj, opticnerve, eom, binocular, disturb)
+```
+
+```{r filter}
+which(apply(core17, 1, function(r) any(r %in% mucor)))
+which(apply(core17, 1, function(r) any(r %in% other)))
+
+which(apply(core18, 1, function(r) any(r %in% mucor)))
+which(apply(core18, 1, function(r) any(r %in% other)))
+
+which(apply(core19, 1, function(r) any(r %in% mucor)))
+which(apply(core19, 1, function(r) any(r %in% other)))
+```
+
+```{r full19, warning=F}
+library(readr)
+core19all <- read_csv("Core_2019_all.csv")
+head(core19all)
+
+core19all1 <- core19all[1:1000000, ]
+mucor19.1 <- which(apply(core19all1, 1, function(r) any(r %in% mucor)))
+
+core19all2 <- core19all[1000001:2000000, ]
+mucor19.2 <- which(apply(core19all2, 1, function(r) any(r %in% mucor)))
+
+core19all3 <- core19all[2000001:3000000, ]
+mucor19.3 <- which(apply(core19all3, 1, function(r) any(r %in% mucor)))
+
+core19all4 <- core19all[3000001:4000000, ]
+mucor19.4 <- which(apply(core19all4, 1, function(r) any(r %in% mucor)))
+
+core19all5 <- core19all[4000001:5000000, ]
+mucor19.5 <- which(apply(core19all5, 1, function(r) any(r %in% mucor)))
+
+core19all6 <- core19all[5000001:6000000, ]
+mucor19.6 <- which(apply(core19all6, 1, function(r) any(r %in% mucor)))
+
+save.image(file='almost.RData')
+load('almost.RData')
+
+core19all7 <- core19all[6000001:7083805, ]
+mucor19.7 <- which(apply(core19all7, 1, function(r) any(r %in% mucor)))
+
+
+
+
+
+
+
+mucor19 <- rbind(core19all1[mucor19.1, ], core19all2[mucor19.2, ], core19all3[mucor19.3, ], core19all4[mucor19.4, ], core19all5[mucor19.5, ], core19all6[mucor19.6, ], core19all7[mucor19.7, ])
+
+filt19 <- which(apply(mucor19, 1, function(r) any(r %in% other)))
+```
+
+```{r afterfilt}
+f19 <- read.csv('Core_2019_Filtered.csv')
+```

@@ -1,0 +1,133 @@
+---
+title: "Stats 141XP - Final Project 2"
+author: 'Anna Lee (UID: 505 088 325)'
+date: "2/15/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r cols}
+library(comorbidity)
+
+join17 <- read.csv('Filtered_Patients_Hospital_2017.csv')
+join18 <- read.csv('Filtered_Patients_Hospital_2018.csv')
+join19 <- read.csv('Filtered_Patients_Hospital_2019.csv')
+
+
+codes17 <- data.frame()
+for (i in 1:nrow(join17)) {
+  for (j in 20:59) {
+    if (!is.na(join17[i, j])) {
+      codes17 <- rbind(codes17, c(i, as.character(join17[i, j])), stringsAsFactors = F)
+    }
+  }
+}
+names(codes17)[1] <- "id"
+names(codes17)[2] <- "code"
+
+x17 <- comorbidity(x = codes17, id = "id", code = "code",
+                   map = "elixhauser_icd10_quan", assign0 = FALSE)
+
+join17$COMOR <- as.vector(score(x = x17, weights = "vw", assign0 = FALSE))
+
+codes18 <- data.frame()
+for (i in 1:nrow(join18)) {
+  for (j in 19:58) {
+    if (!is.na(join18[i, j])) {
+      codes18 <- rbind(codes18, c(i, as.character(join18[i, j])), stringsAsFactors = F)
+    }
+  }
+}
+names(codes18)[1] <- "id"
+names(codes18)[2] <- "code"
+
+x18 <- comorbidity(x = codes18, id = "id", code = "code",
+                   map = "elixhauser_icd10_quan", assign0 = FALSE)
+
+join18$COMOR <- as.vector(score(x = x18, weights = "vw", assign0 = FALSE))
+
+codes19 <- data.frame()
+for (i in 1:nrow(join19)) {
+  for (j in 21:60) {
+    if (!is.na(join19[i, j])) {
+      codes19 <- rbind(codes19, c(i, as.character(join19[i, j])), stringsAsFactors = F)
+    }
+  }
+}
+names(codes19)[1] <- "id"
+names(codes19)[2] <- "code"
+
+x19 <- comorbidity(x = codes19, id = "id", code = "code",
+                   map = "elixhauser_icd10_quan", assign0 = FALSE)
+
+join19$COMOR <- as.vector(score(x = x19, weights = "vw", assign0 = FALSE))
+
+# colnames(join17)
+# colnames(join18)
+# colnames(join19)
+
+clean17 <- join17[c(3, 7, 9, 16, 61, 88, 120, 121, 130, 132, 141)]
+clean18 <- join18[c(3, 7, 9, 15, 60, 87, 118, 119, 128, 130, 139)]
+clean19 <- join19[c(3, 7, 9, 15, 64, 92, 124, 125, 134, 136, 145)]
+
+clean <- rbind(clean17, clean18, clean19)
+write.csv(clean, 'Joined2.csv')
+```
+
+```{r eda}
+join <- read.csv('Joined.csv')
+head(join)
+table(join$DIED)
+table(join$FEMALE)
+table(join$RACE)
+hist(join$AGE)
+hist(join$I10_NPR)
+hist(join$TOTCHG)
+hist(join$LOS)
+```
+
+```{r sample}
+library(readr)
+core19all <- read_csv("Core_2019_all.csv")
+
+mucor <- c("B461", "B465")
+core19all1 <- core19all[1:1000000, ]
+mucor19.1 <- which(apply(core19all1, 1, function(r) any(r %in% mucor)))
+
+set.seed(141)
+samp1 <- sample(1:990000, 22000, replace = F)
+
+non19 <- core19all1[-mucor19.1, ][samp1, ]
+
+write.csv(non19, 'non19.csv')
+
+
+
+
+
+# core18all <- read_csv("Core_2018_all.csv")
+# 
+# core18all1 <- core18all[1:1000000, ]
+# mucor18.1 <- which(apply(core18all1, 1, function(r) any(r %in% mucor)))
+# 
+# samp2 <- sample(1:990000, 22000, replace = F)
+# 
+# non18 <- core18all1[-mucor18.1, ][samp2, ]
+# 
+# 
+# 
+# 
+# 
+# 
+# core17all <- read_csv("Core_2017_all.csv")
+# 
+# core17all1 <- core17all[1:1000000, ]
+# mucor17.1 <- which(apply(core17all1, 1, function(r) any(r %in% mucor)))
+# 
+# samp3 <- sample(1:990000, 22000, replace = F)
+# 
+# non17 <- core17all1[-mucor17.1, ][samp3, ]
+```
