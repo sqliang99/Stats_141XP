@@ -1,6 +1,6 @@
 ---
 title: "Stats 141XP - Final Project 2"
-author: 'Anna Lee (UID: 505 088 325)'
+author: 'Anna Lee'
 date: "2/15/2022"
 output: pdf_document
 ---
@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r cols}
+# compute comorbidity scores
 library(comorbidity)
 
 join17 <- read.csv('Filtered_Patients_Hospital_2017.csv')
@@ -17,6 +18,7 @@ join18 <- read.csv('Filtered_Patients_Hospital_2018.csv')
 join19 <- read.csv('Filtered_Patients_Hospital_2019.csv')
 
 
+# make data frame with all codes per patient for 2017 data
 codes17 <- data.frame()
 for (i in 1:nrow(join17)) {
   for (j in 20:59) {
@@ -28,11 +30,14 @@ for (i in 1:nrow(join17)) {
 names(codes17)[1] <- "id"
 names(codes17)[2] <- "code"
 
+# calculate score using function from comorbidity package
 x17 <- comorbidity(x = codes17, id = "id", code = "code",
                    map = "elixhauser_icd10_quan", assign0 = FALSE)
 
+# add scores to data set as new variable
 join17$COMOR <- as.vector(score(x = x17, weights = "vw", assign0 = FALSE))
 
+# make data frame with all codes per patient for 2018 data
 codes18 <- data.frame()
 for (i in 1:nrow(join18)) {
   for (j in 19:58) {
@@ -49,6 +54,7 @@ x18 <- comorbidity(x = codes18, id = "id", code = "code",
 
 join18$COMOR <- as.vector(score(x = x18, weights = "vw", assign0 = FALSE))
 
+# make data frame with all codes per patient for 2019 data
 codes19 <- data.frame()
 for (i in 1:nrow(join19)) {
   for (j in 21:60) {
@@ -65,10 +71,6 @@ x19 <- comorbidity(x = codes19, id = "id", code = "code",
 
 join19$COMOR <- as.vector(score(x = x19, weights = "vw", assign0 = FALSE))
 
-# colnames(join17)
-# colnames(join18)
-# colnames(join19)
-
 clean17 <- join17[c(3, 7, 9, 16, 61, 88, 120, 121, 130, 132, 141)]
 clean18 <- join18[c(3, 7, 9, 15, 60, 87, 118, 119, 128, 130, 139)]
 clean19 <- join19[c(3, 7, 9, 15, 64, 92, 124, 125, 134, 136, 145)]
@@ -78,6 +80,7 @@ write.csv(clean, 'Joined2.csv')
 ```
 
 ```{r eda}
+# basic EDA
 join <- read.csv('Joined.csv')
 head(join)
 table(join$DIED)
@@ -90,19 +93,19 @@ hist(join$LOS)
 ```
 
 ```{r sample}
-library(readr)
-core19all <- read_csv("Core_2019_all.csv")
-
-mucor <- c("B461", "B465")
-core19all1 <- core19all[1:1000000, ]
-mucor19.1 <- which(apply(core19all1, 1, function(r) any(r %in% mucor)))
-
-set.seed(141)
-samp1 <- sample(1:990000, 22000, replace = F)
-
-non19 <- core19all1[-mucor19.1, ][samp1, ]
-
-write.csv(non19, 'non19.csv')
+# library(readr)
+# core19all <- read_csv("Core_2019_all.csv")
+# 
+# mucor <- c("B461", "B465")
+# core19all1 <- core19all[1:1000000, ]
+# mucor19.1 <- which(apply(core19all1, 1, function(r) any(r %in% mucor)))
+# 
+# set.seed(141)
+# samp1 <- sample(1:990000, 22000, replace = F)
+# 
+# non19 <- core19all1[-mucor19.1, ][samp1, ]
+# 
+# write.csv(non19, 'non19.csv')
 
 
 
