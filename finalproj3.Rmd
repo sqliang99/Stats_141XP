@@ -1,6 +1,6 @@
 ---
-title: "Stats 141XP - Final Project"
-author: 'Anna Lee (UID: 505 088 325)'
+title: "Stats 141XP - Final Project 3"
+author: 'Anna Lee'
 date: "2/16/2022"
 output: pdf_document
 ---
