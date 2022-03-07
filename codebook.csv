@@ -1,0 +1,25 @@
+Code,Label,Type,Mean
+YEAR,year of patient hospitalization,integer,2018.044118
+Over20,whether patient age is over 20 or not,integer,0.970588235
+AGE,age of patient in years,integer,52.95588235
+FEMALE,patient sex,integer,0.382352941
+RACE,patient race,integer,1.485294118
+RACE_WHITE,whether patient race is white or not,integer,0.514705882
+ZIPINC_QRTL,"median household income national quartile 
+                     based on patient ZIP code",integer,2.264705882
+HOSP_LOCTEACH,location/teaching status of hospital,integer,2.926470588
+HOSP_REGION,U.S. region of hospital,integer,2.955882353
+DIED,whether patient died,integer,0.191176471
+DISPUNIFORM,disposition of the patient at discharge,integer,6.132352941
+LOS,patient length of stay in days,integer,19.48529412
+TOTCHG,total charges in USD,integer,370008.8824
+I10_NPR,number of procedures undergone by patient,integer,7.544117647
+COMOR,patient Elixhauser score (overall),integer,10.55882353
+COMOR_D,"patient Elixhauser score 
+                     (only including diabetes-related comorbidities)",integer,0
+COMOR_NO_D,patient Elixhauser score (excluding diabetes-related comorbidities),integer,1.102941176
+COMOR_C,"patient Elixhauser score 
+                     (only including cancer-related comorbidities)",integer,4.411764706
+COMOR_NO_C,patient Elixhauser score (excluding cancer-related comorbidities),integer,9.455882353
+DIABETES,whether patient has a diabetes-related comorbidity or not,logical,0.705882353
+CANCER,whether patient has a cancer-related comorbidity or not,logical,0.25
