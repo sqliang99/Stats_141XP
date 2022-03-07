@@ -1,0 +1,38 @@
+---
+title: "Joining Tables"
+author: "Shiqi Liang"
+output: html_document
+---
+```{r}
+library(sqldf)
+library("readxl")
+```
+```{r}
+y2019 <-read.csv('Filtered_Patients_Hospital_2019.csv')
+y2018 <-read.csv('Filtered_Patients_Hospital_2018.csv')
+y2017 <-read_excel('Filtered_Patients_Hospital_2017.xlsx')
+
+#make sure data is read correctly
+head(y2019)
+head(y2018)
+head(y2017)
+```
+
+```{r}
+tempt = sqldf('SELECT AGE,DIED,DISPUNIFORM ,FEMALE,I10_NPR,LOS,RACE,TOTCHG,HOSP_LOCTEACH,HOSP_REGION,ZIPINC_QRTL,2017 as YEAR
+        FROM y2017
+      UNION
+      SELECT AGE,DIED,DISPUNIFORM ,FEMALE,I10_NPR,LOS,RACE,TOTCHG,HOSP_LOCTEACH,HOSP_REGION,ZIPINC_QRTL,2018 as YEAR 
+        FROM y2018
+      UNION
+      SELECT AGE,DIED,DISPUNIFORM ,FEMALE,I10_NPR,LOS,RACE,TOTCHG,HOSP_LOCTEACH,HOSP_REGION,ZIPINC_QRTL,2019 as YEAR
+        FROM y2019')
+```
+
+```{R}
+
+comor = read.csv('Joined2.csv')
+final = sqldf('select t.*, c.COMOR from tempt as t left join comor c using(TOTCHG)')
+final
+write.csv(final,"Joined3.csv")
+```

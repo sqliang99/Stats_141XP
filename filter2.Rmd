@@ -1,0 +1,57 @@
+---
+title: "Filter2"
+author: "Shiqi Liang"
+output: html_document
+---
+
+```{r}
+library(sqldf)
+library("readxl")
+```
+```{r}
+y2019 <-read.csv('Filtered_Patients_Hospital_2019.csv')
+y2018 <-read.csv('Filtered_Patients_Hospital_2018.csv')
+y2017 <-read_excel('Filtered_Patients_Hospital_2017.xlsx')
+
+#make sure data is read correctly
+head(y2019)
+head(y2018)
+head(y2017)
+```
+```{r}
+l = list()
+
+l[[1]]=colnames(y2019)
+l[[2]]=colnames(y2018)
+l[[3]]=colnames(y2017)
+common_index = Reduce(intersect,l)
+common_index
+```
+
+```{r}
+library(dplyr)
+fy2019 = y2019 %>% select(common_index)
+fy2018 = y2018 %>% select(common_index)
+fy2017 = y2017 %>% select(common_index)
+```
+
+
+```{r}
+
+tempt = sqldf('SELECT *,2017 as YEAR
+        FROM fy2017
+      UNION
+      SELECT *,2018 as YEAR 
+        FROM fy2018
+      UNION
+      SELECT *,2019 as YEAR
+        FROM fy2019')
+head(tempt)
+```
+```{r}
+
+comor = read.csv('Joined4_NonsenseReplaced.csv')
+final = sqldf('select c.COMOR, t.* from comor c left join tempt as t using(TOTCHG)')
+final
+write.csv(final,"Joined5.csv")
+```
