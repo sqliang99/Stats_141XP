@@ -1,6 +1,6 @@
 ---
-title: "Stats 141XP - Final Project"
-author: 'Anna Lee (UID: 505 088 325)'
+title: "Stats 141XP - Final Project 1"
+author: 'Anna Lee'
 date: "2/8/2022"
 output: pdf_document
 ---
@@ -14,6 +14,7 @@ core17 <- read.csv("Core_2017.csv")
 core18 <- read.csv("Core_2018.csv")
 core19 <- read.csv("Core_2019.csv")
 
+# vectors of ICDs of interest
 orbitconj <- gsub("\\.", "", c("H05.00", "H05.20", "H05.21", "H05.211", "H05.212", "H05.213", "H05.219", "H05.22", "H05.221", "H05.222", "H05.223", "H05.229", "H05.23", "H05.231", "H05.232", "H05.233", "H05.239", "H05.24", "H05.241", "H05.242", "H05.243", "H05.249", "H05.34", "H05.341", "H05.342", "H05.343", "H05.349", "H05.89", "H05.9", "H01.8", "H01.9", "H02.84", "H02.841", "H02.842", "H02.843", "H02.844", "H02.845", "H02.846", "H02.849", "H02.89", "H02.9", "H11.42", "H11.421", "H11.422", "H11.423", "H11.429", "H11.43", "H11.431", "H11.432", "H11.433", "H11.439"))
 opticnerve <- gsub("\\.", "", c("H47.51", "H47.511", "H47.512", "H47.519", "H47.4", "H47.41"))
 eom <- gsub("\\.", "", c("H49", "H49.0", "H49.00", "H49.01", "H49.02", "H49.03", "H49.1", "H49.10", "H49.11", "H49.12", "H49.13", "H49.2", "H49.20", "H49.21", "H49.22", "H49.23", "H49.3", "H49.30", "H49.31", "H49.32", "H49.33", "H49.4", "H49.40", "H49.41", "H49.42", "H49.43"))
@@ -25,6 +26,7 @@ other <- c(orbitconj, opticnerve, eom, binocular, disturb)
 ```
 
 ```{r filter}
+# code used to filter to just patients with orbital mucormycosis
 which(apply(core17, 1, function(r) any(r %in% mucor)))
 which(apply(core17, 1, function(r) any(r %in% other)))
 
@@ -40,6 +42,7 @@ library(readr)
 core19all <- read_csv("Core_2019_all.csv")
 head(core19all)
 
+# applying code from above to all core files, in chunks because file is large
 core19all1 <- core19all[1:1000000, ]
 mucor19.1 <- which(apply(core19all1, 1, function(r) any(r %in% mucor)))
 
@@ -66,12 +69,10 @@ mucor19.7 <- which(apply(core19all7, 1, function(r) any(r %in% mucor)))
 
 
 
-
-
-
-
+# all patients with mucormycosis
 mucor19 <- rbind(core19all1[mucor19.1, ], core19all2[mucor19.2, ], core19all3[mucor19.3, ], core19all4[mucor19.4, ], core19all5[mucor19.5, ], core19all6[mucor19.6, ], core19all7[mucor19.7, ])
 
+# all patients with orbital mucormycosis
 filt19 <- which(apply(mucor19, 1, function(r) any(r %in% other)))
 ```
 
