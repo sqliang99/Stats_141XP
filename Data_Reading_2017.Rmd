@@ -1,0 +1,57 @@
+---
+title: "Data Reading"
+author: "Shiqi Liang"
+output: html_document
+---
+```{r}
+library(readr)
+library(tidyverse)
+library(here)
+col_spec <- read_fwf(here("FileSpecifications_NIS_2017_Severity.TXT"), 
+              skip =19) %>%
+  select(start = X6, end = X7)
+Severity_2017 = read_fwf(here("NIS_2017_Severity.ASC"), 
+              col_positions = fwf_positions(start = col_spec$start, end = col_spec$end))
+col_names<- read_fwf(here("FileSpecifications_NIS_2017_Severity.TXT"), 
+              skip =19) %>%
+  select(X5)
+colnames(Severity_2017) = col_names$X5
+head(Severity_2017)
+```
+
+```{r}
+col_spec <- read_fwf(here("FileSpecifications_NIS_2017_Hospital.TXT"), 
+              skip =19) %>%
+  select(start = X6, end = X7)
+Hospital_2017 = read_fwf(here("NIS_2017_Hospital.ASC"), 
+              col_positions = fwf_positions(start = col_spec$start, end = col_spec$end))
+col_names<- read_fwf(here("FileSpecifications_NIS_2017_Hospital.TXT"), 
+              skip =19) %>%select(X5)
+colnames(Hospital_2017) = col_names$X5
+head(Hospital_2017)
+```
+
+```{R}
+col_spec <- read_fwf(here("FileSpecifications_NIS_2017_Core.TXT"), 
+              skip =19) %>%
+  select(start = X6, end = X7)
+Core_2017 = read_fwf(here("NIS_2017_Core.ASC"), 
+              col_positions = fwf_positions(start = col_spec$start, end = col_spec$end))
+col_names<- read_fwf(here("FileSpecifications_NIS_2017_Core.TXT"), 
+              skip =19) %>%
+  select(X5)
+colnames(Core_2017) = col_names$X5
+head(Core_2017)
+```
+
+```{r}
+write.csv(Severity_2017,"Severity_2017.csv")
+```
+
+```{r}
+write.csv(Hospital_2017,"Hospital_2017.csv")
+```
+
+```{r}
+write.csv(Core_2017,"Core_2017.csv")
+```
