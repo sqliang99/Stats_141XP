@@ -4,7 +4,7 @@ This project is for Dr. Rootman as part of UCLA's Stats 141XP.
 The people who worked on this project are: <br/>
 <a href="https://github.com/alee5719">Anna Lee</a> <br/>
 <a href="https://github.com/sqliang99">Shiqi Liang</a> <br/>
-Yongpeng Luo <br/>
+<a href="https://github.com/yongpeng168">Yongpeng Luo</a> <br/>
 <a href="https://github.com/mattesmaili">Matthew Mallory</a> <br/>
 Sungho Moon <br/>
 Daniel Wray <br/>
