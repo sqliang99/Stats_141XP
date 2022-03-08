@@ -22,7 +22,7 @@ Used to process ASCII file into csv for year 2017. Returns 3 files: 2017 Core, 2
 <a href="https://github.com/sqliang99/Stats_141XP/blob/main/Data_Reading_2018.Rmd">Data_Reading_2018</a> <br/>
 Same as above but for year 2018.<br/>
 
-<a href="https://github.com/sqliang99/Stats_141XP/blob/main/Data_Reading_2019.Rmd">Data_Reading_2017</a> <br/>
+<a href="https://github.com/sqliang99/Stats_141XP/blob/main/Data_Reading_2019.Rmd">Data_Reading_2019</a> <br/>
 Same as above but for year 2019 <br/>
 
 ### Data Filtering
