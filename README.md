@@ -43,7 +43,7 @@ Computes comorbidity scores from the comorbidity package
 <a href="https://github.com/sqliang99/Stats_141XP/blob/main/finalproj3.Rmd">finalproj3.Rmd</a> <br/>
 Basic EDA <br/>
 
-<a href="https://github.com/sqliang99/Stats_141XP/blob/main/final_projecteda.Rmd">finalproj3.Rmd</a> <br/>
+<a href="https://github.com/sqliang99/Stats_141XP/blob/main/final_projecteda.Rmd">final_projecteda.Rmd</a> <br/>
 Some EDA plots and tables for predictors <br/>
 
 ### Modeling
