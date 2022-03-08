@@ -1,0 +1,85 @@
+---
+title: "stats141xp"
+author: "Yongpeng Luo 805542121"
+date: "2/14/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+joined<- read.csv("~/stats141xp/Joined7_NonsenseRemoved.csv")
+library(ggplot2)
+
+```
+```{r}
+# Age
+summary(joined$AGE)
+ggplot(joined, aes(x=AGE)) + geom_histogram(bins=20)
+hist(joined$AGE)
+```
+```{r}
+#TOTCHG
+summary(joined$TOTCHG)
+ggplot(joined, aes(x=TOTCHG)) + geom_histogram(bins=20)
+```
+
+```{r}
+# Female
+ggplot(joined, aes(x=FEMALE)) + geom_bar()
+summary(joined$FEMALE)
+```
+```{r}
+# Comorbidity Score
+
+summary(joined$COMOR)
+ggplot(joined, aes(x=COMOR)) + geom_histogram(binwidth=2)
+```
+```{r}
+# length of stay
+summary(joined$LOS)
+ggplot(joined, aes(x=LOS)) + geom_histogram(binwidth=8)
+```
+
+```{r}
+# Number of Procedure
+summary(joined$I10_NPR)
+ggplot(joined, aes(x=I10_NPR)) + geom_histogram(binwidth=2)
+
+```
+```{r}
+# Death Status
+
+summary(joined$DIED)
+ggplot(joined, aes(x=DIED)) + geom_bar()
+
+```
+```{r}
+# Race
+summary(joined$RACE)
+ggplot(joined, aes(x=RACE)) + geom_bar()
+table(joined$RACE,joined$DIED)
+```
+```{r}
+# Hospital location
+summary(joined$HOSP_LOCTEACH)
+ggplot(joined, aes(x=HOSP_LOCTEACH)) + geom_bar()
+table(joined$HOSP_LOCTEACH,joined$DIED)
+```
+
+```{r}
+# Hospital Region
+summary(joined$HOSP_REGION)
+ggplot(joined, aes(x=HOSP_REGION)) + geom_bar()
+table(joined$HOSP_REGION,joined$DIED)
+```
+
+```{r}
+# Zipcode income quantile
+summary(joined$ZIPINC_QRTL)
+ggplot(joined, aes(x=ZIPINC_QRTL)) + geom_bar()
+table(joined$ZIPINC_QRTL,joined$DIED)
+```
+
