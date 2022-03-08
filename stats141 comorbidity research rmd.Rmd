@@ -1,0 +1,141 @@
+---
+title: "Comorbidity ICD Analysis"
+author: "Daniel Wray 105134386"
+date: "3/7/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+This document investigates specific ICDs and creates two boolian variables that identify patients with ICDs indicative of Diabetes/DKA and Cancer/Oncology/Chemotherapy.
+
+### Reading and Organizing the Data
+
+This document requires the filtered csv's with non-target observations removed!
+
+```{r}
+library(readr)
+library(dplyr)
+core2019 <- read_csv("Core_2019_Filtered.csv")
+core2018 <- read_csv("Core_2018_Filtered.csv")
+core2017 <- read_csv("Core_2017_Filtered - Core_2017_Filtered.csv.csv")
+
+core <- bind_rows(core2017, core2018, core2019)
+
+### Extracting only the ICD codes from the dataset ###
+cm_data <- core[,c(1, 20:59)]
+cm_data_clean <- core[,c(20:59)]
+
+```
+
+
+### INVESTIGATING COMORBIDITIES
+
+For the first three characters, for codes like E10
+
+```{r}
+#### Investigation of first three characters of ICD codes ####
+### Only extracting the first three characters of the ICD codes
+simplified_3 <- substr(as.matrix(cm_data_clean), 1, 3)
+
+## Table of first 3 characters of codes ##
+table(simplified_3)
+
+## Creating dataset with observations marked if they contain an ICD code with certain first 3 characters
+cm_simplified_3 <- names(table(simplified_3))
+cm_type_data_3 <- data.frame(matrix(ncol = 317, nrow = 68))
+for(i in 1:317){
+  cm_type_data_3[,i] <- apply(simplified_3, 1, function(r) any(r %in% cm_simplified_3[i]))
+}
+colnames(cm_type_data_3) <- cm_simplified_3
+
+## Totals of all codes
+colSums(cm_type_data_3)
+
+```
+
+For the first three characters, for codes like C
+
+```{r}
+#### Investigation of first character of ICD codes ####
+### Only extracting the first character of the ICD codes
+simplified_1 <- substr(as.matrix(cm_data_clean), 1, 1)
+
+## Table of first character of codes
+table(simplified_1)
+
+## Creating dataset with observations marked if they contain an ICD code that starts with a certain character 
+cm_simplified_1 <- names(table(simplified_1))
+cm_type_data_1 <- data.frame(matrix(ncol = 23, nrow = 68))
+for(i in 1:23){
+  cm_type_data_1[,i] <- apply(simplified_1, 1, function(r) any(r %in% cm_simplified_1[i]))
+}
+colnames(cm_type_data_1) <- cm_simplified_1
+
+## Totals of all codes
+colSums(cm_type_data_1)
+
+
+### Looking at specific ICD code distributions
+Es <- as.matrix(cm_data_clean)[which(simplified_1 == "E")]
+table(Es)
+
+Cs <- as.matrix(cm_data_clean)[which(simplified_1 == "C")]
+table(Cs)
+
+Zs <- as.matrix(cm_data_clean)[which(simplified_1 == "Z")]
+table(Zs)
+```
+
+
+
+### Investigating Distributions and Creating Bools
+
+```{r}
+## First diabetes
+DIABETES <- vector(length = 68)
+
+DIABETES[which(cm_type_data_3$E10 == TRUE)] <- TRUE
+DIABETES[which(cm_type_data_3$E11 == TRUE)] <- TRUE
+DIABETES[which(cm_type_data_3$E12 == TRUE)] <- TRUE
+DIABETES[which(cm_type_data_3$E13 == TRUE)] <- TRUE
+DIABETES[which(cm_type_data_3$E14 == TRUE)] <- TRUE
+
+table(DIABETES)
+
+
+## Then Cancer
+CANCER <- vector(length = 68)
+
+CANCER[which(cm_type_data_1$C == TRUE)] <- TRUE
+
+table(CANCER)
+
+
+## Finally immunosuppressants
+IMMUNO <- vector(length = 68)
+
+IMMUNO[which(cm_type_data_3$Z92 == TRUE)] <- TRUE
+
+table(IMMUNO)
+
+
+#### Creating Tables for Analysis ####
+
+data_for_tables <- data.frame(core, DIABETES, CANCER, IMMUNO)
+table(data_for_tables[c("DIABETES", "DIED")])
+table(data_for_tables[c("CANCER", "DIED")])
+table(data_for_tables[c("IMMUNO", "DIED")])
+table(data_for_tables[c("DIABETES", "CANCER", "DIED")])
+
+```
+
+
+### Dataframe Creation
+```{r}
+ICD_two_bool_variables <- data.frame(DIABETES, CANCER)
+write.csv(ICD_two_bool_variables, "ICD Diabetes and Cancer.csv")
+```
