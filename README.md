@@ -11,13 +11,6 @@ Daniel Wray <br/>
 
 ## File Descriptions
 
-### Clean Data: Use this for future projects
-<a href="https://github.com/sqliang99/Stats_141XP/blob/main/Joined7_NonsenseRemoved.csv">Joined7_NonsenseRemoved.csv</a> <br/>
-CSV file for clean data where nonsense values are removed. See final report for details
-
-<a href="https://github.com/sqliang99/Stats_141XP/blob/main/Joined7_NonsenseReplaced.csv">Joined7_NonsenseReplaced.csv</a> <br/>
-CSV file for clean data where nonsense values are replaced. See final report for details
-
 ### Codebook
 <a href="https://github.com/sqliang99/Stats_141XP/blob/main/codebook.csv">codebook.csv</a> <br/>
 Codebook for final data set including descriptions of all variables
