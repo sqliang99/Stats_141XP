@@ -5,7 +5,7 @@ The people who worked on this project are: <br/>
 <a href="https://github.com/alee5719">Anna Lee</a> <br/>
 <a href="https://github.com/sqliang99">Shiqi Liang</a> <br/>
 Yongpeng Luo <br/>
-Matthew Mallory <br/>
+<a href="https://github.com/mattesmaili">Matthew Mallory</a> <br/>
 Sungho Moon <br/>
 Daniel Wray <br/>
 
