@@ -57,7 +57,7 @@ Investigates specific ICD codes for Diabetes/DKA, Cancer/Oncology/Chemotherapy, 
 First few models: GLM, LDA, tree, and random forest.
 
 <a href="https://github.com/sqliang99/Stats_141XP/blob/main/Final_One.Rmd">Final Models.Rmd</a> <br/>
-Final random forest models and linear models for outcomes other than mortality.
+Our random forest models and linear models for outcomes other than mortality, done before our final presentation.
 
 ### R Package
 <a href="https://github.com/sqliang99/Stats_141XP/blob/main/comorbidity_package.pdf">comorbidity_package.pdf</a> <br/>
