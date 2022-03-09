@@ -1,0 +1,90 @@
+---
+title: "Final Models"
+author: "Matthew Mallory"
+date: "3/5/2022"
+output: pdf_document
+---
+
+Data & Packages
+```{r, warning = F, message = F}
+d7 = read.csv("data7_replaced.csv")
+library(corrplot)
+library(MASS)
+library(mgcv)
+library(tree)
+library(pROC)
+library(ggplot2)
+library(randomForest)
+
+deaths = ifelse(d7$DIED == 0, "Alive", "Dead")
+```
+
+Random Forests
+```{r, message = F, warning = F}
+
+test = sample(1:68, 14, replace = F)
+d7train = d7[-test, ]
+d7test = d7[test, ]
+
+mod1 = gam(DIED ~ s(AGE) + FEMALE + RACE + ZIPINC_QRTL + HOSP_REGION + CANCER + DIABETES + s(COMOR), 
+           data = d7train, family = binomial, method = "REML")
+test_pred = as.factor(ifelse(predict(mod1, d7test, type = "response") <= 0.5, 0, 1))
+table(test_pred, d7test$DIED)
+
+
+set.seed(1000)
+predictions = numeric(68)
+
+for(i in 1:68){
+  model = randomForest(DIED ~ AGE + FEMALE + RACE + ZIPINC_QRTL + HOSP_REGION + CANCER + DIABETES + COMOR,
+         data = d7[-i, ], importance = T, mtry = 8)
+  predictions[i] = predict(model, newdata = d7[i, ], type = "class")
+}
+
+predictions = ifelse(predictions <= 0.5, 0, 1)
+table(predictions, d7$DIED)
+```
+
+```{r}
+#RAND FOREST
+model2 = randomForest(DIED ~ AGE + FEMALE + RACE + ZIPINC_QRTL + HOSP_REGION + CANCER + DIABETES + COMOR,
+         data = d7, importance = T, mtry = 8)
+importance = as.data.frame(importance(model2))
+
+#GLM
+set.seed(141)
+
+model_a = glm(DIED ~ AGE + FEMALE + RACE + HOSP_REGION + COMOR + COMOR_NO_C + ZIPINC_QRTL,
+         data = d7, family = "binomial")
+summary(model_a)
+
+pred_a = as.factor(ifelse(predict(model_a, d7, type = "response") <= 0.5, "Alive", "Dead"))
+names(pred_1) = NULL
+table(pred_1, deaths) #57 / 68
+
+
+model_b = lm(TOTCHG ~ AGE + FEMALE + RACE + ZIPINC_QRTL + HOSP_REGION + CANCER + DIABETES + COMOR,
+         data = d7)
+summary(model_b) #R^2 = 13.54, nothing significant
+
+model_c = lm(LOS ~ AGE + FEMALE + RACE + ZIPINC_QRTL + HOSP_REGION + CANCER + DIABETES + COMOR,
+         data = d7)
+summary(model_c) #R^2 = 8.441, nothing significant
+
+model_d = lm(I10_NPR ~ AGE + FEMALE + RACE + ZIPINC_QRTL + HOSP_REGION + CANCER + DIABETES + COMOR,
+         data = d7)
+summary(model_d) #R^2 = 9.626, nothing significant
+
+model_e = lm(DISPUNIFORM ~ AGE + FEMALE + RACE + ZIPINC_QRTL + HOSP_REGION + CANCER + DIABETES + COMOR,
+         data = d7)
+summary(model_e) #R^2 = 18.34
+```
+
+It appears our most important predictors are the demographics (gender, race, then age), and then the comorbidity score.
+
+
+
+
+
+
+

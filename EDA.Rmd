@@ -1,0 +1,119 @@
+---
+title: \textbf{\textsf{"Joined4 Nonsense Replaced" EDA}}
+author: \em{Matthew Mallory}
+date: \em{2/20/2022}
+output: pdf_document
+---
+
+```{r, warning = F, message = F}
+ds = read.csv("Joined4_NonsenseReplaced.csv")[, -c(1, 2)]
+d7 = read.csv("data7_replaced.csv")
+library(corrplot)
+library(ROCR)
+library(MASS)
+library(tree)
+library(pROC)
+library(ggplot2)
+library(randomForest)
+```
+
+## Distribution of Death:
+
+```{r, out.width = "50%"}
+deaths = character(68)
+deaths = as.factor(ifelse(ds$DIED == 0, "Alive", "Dead"))
+table(deaths)
+plot(deaths)
+```
+
+Since $55/68 \approx 81\%$ of people did not die, any prediction model should have accuracy of at least 81\% or higher. 
+
+## Correlation Stuff 
+```{r}
+corrplot(cor(ds), method = 'square', order = 'alphabet')
+```
+
+Based on this graphic, we can see that the pairs of variables that are the most related are the following:
+
+1. Died, Disposition: `r cor(ds$DIED, ds$DISPUNIFORM)`
+2. Length of Stay, I10_NPR: `r cor(ds$LOS, ds$I10_NPR)`
+3. Total Charge, I10_NPR: `r cor(ds$TOTCHG, ds$I10_NPR)`
+4. Age, Age_Under20: `r cor(ds$AGE, ds$AGE_under20)`
+5. Age, Disposition: `r cor(ds$AGE, ds$DISPUNIFORM)`
+6. Died, Age: `r cor(ds$DIED, ds$AGE)`
+7. Total Charge, Zip Inc Quartile: `r cor(ds$TOTCHG, ds$ZIPINC_QRTL)`
+
+## Different Models
+
+### GLM
+
+```{r}
+m1 = glm(DIED ~ AGE + FEMALE + RACE + ZIPINC_QRTL + HOSP_REGION + CANCER + DIABETES + COMOR, 
+         family = binomial, data = d7)
+summary(m1)
+pred_1 = as.factor(ifelse(predict(m1, d7, type = "response") <= 0.5, "Alive", "Dead"))
+names(pred_1) = NULL
+table(pred_1, deaths)
+
+roc1 = performance(prediction(predict(m1, d7, type ='response'), deaths), "tpr", "fpr")
+plot(roc1, colorize = T, main="ROC Curve for Logistic Regression Model")
+```
+
+It seems that age and gender (demographics) are the most important predictors, but even they are not significantly different from zero, which is quite bad.
+
+In terms of accuracy, our most basic GLM model correctly predicts $57/68 \approx 83.8\%$ of deaths, which is only slightly better than just saying that everyone lives.
+
+### LDA (QDA doesn't work)
+
+```{r}
+m2 = lda(DIED ~ AGE + FEMALE + RACE + HOSP_LOCTEACH + HOSP_REGION + COMOR + YEAR + ZIPINC_QRTL,
+         data = ds)
+pred_2 = predict(m2, newdata = ds)$class
+pred_2 = ifelse(pred_2 == 0, "Alive", "Dead")
+table(pred_2, deaths)
+
+# m3 = qda(DIED ~ AGE + FEMALE + RACE + HOSP_LOCTEACH + HOSP_REGION + COMOR + YEAR + ZIPINC_QRTL,data = ds)
+# pred_3 = predict(m3, newdata = ds)$class
+# pred_3 = ifelse(pred_3 == 0, "Alive", "Dead")
+# table(pred_3, deaths)
+```
+
+We see that LDA correctly predicts $56/68 \approx 82.4\%$, and that is slightly worse than the GLM.
+
+### Tree / Random Forest
+
+```{r}
+m3 = tree(deaths ~ AGE + FEMALE + RACE + HOSP_LOCTEACH + HOSP_REGION + COMOR + YEAR + ZIPINC_QRTL,
+         data = ds)
+summary(m3)
+pred_3 = predict(m3, data = ds, type = "class")
+table(pred_3, deaths)
+
+set.seed(1004)
+
+
+test_ind = sample(68, 20)
+dsTRAIN = ds[-test_ind, ]
+dsTEST = ds[test_ind, ]
+
+
+m4 = randomForest(DIED ~ AGE + FEMALE + RACE + HOSP_REGION + COMOR + YEAR + ZIPINC_QRTL,
+         data = dsTRAIN, importance = T, mtry = 7)
+pred_4 = predict(m4, newdata = ds, type = "class")
+table(pred_4, deaths)
+```
+
+We now see that our tree/ random forest predicts $59/68 \approx 86.8\%$ and $64/68 \approx 94.1\%$ of deaths, which is our best model so far. We can also prune our tree to make it better on future data.
+
+## Segmented Bar Plots
+
+```{r}
+ds$FEMALE_2 = ifelse(ds$FEMALE == 0, "Male", "Female")
+ds$deaths = deaths
+ds$YEAR = as.factor(ds$YEAR)
+ggplot(ds, aes(fill = YEAR, y = DIED, x = FEMALE_2)) + geom_bar(position = "stack", stat = "identity") +
+  labs(x = "Gender", y = "Number of Deaths")
+```
+
+Our data is so small that this bar plot is far from being very meaningful, but it seems that males and females had the same recorded deaths for two years, and then four times more females died in 2019.
+
