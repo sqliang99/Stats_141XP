@@ -49,9 +49,15 @@ Some EDA plots and tables for predictors <br/>
 
 <a href="https://github.com/sqliang99/Stats_141XP/blob/main/stats141%20comorbidity%20research%20rmd.Rmd">stats141 comorbidity research rmd.Rmd</a> <br/>
 Investigates specific ICD codes for Diabetes/DKA, Cancer/Oncology/Chemotherapy, and Immunosuppresants, and creates a dataframe with two boolian variables "Diabetes" and "Cancer".
+
 ### Modeling
 
 
+<a href="https://github.com/sqliang99/Stats_141XP/blob/main/EDA.Rmd">First Models.Rmd</a> <br/>
+First few models: GLM, LDA, tree, and random forest.
+
+<a href="https://github.com/sqliang99/Stats_141XP/blob/main/Final_One.Rmd">Final Models.Rmd</a> <br/>
+Final random forest models and linear models for outcomes other than mortality.
 
 ### R Package
 <a href="https://github.com/sqliang99/Stats_141XP/blob/main/comorbidity_package.pdf">comorbidity_package.pdf</a> <br/>
