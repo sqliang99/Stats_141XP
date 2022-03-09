@@ -1,4 +1,4 @@
-# Stats_141XP
+# Stats 141XP: Team 1 Final Project
 This project is for Dr. Rootman as part of UCLA's Stats 141XP.
 
 The people who worked on this project are: <br/>
