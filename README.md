@@ -50,3 +50,9 @@ Some EDA plots and tables for predictors <br/>
 <a href="https://github.com/sqliang99/Stats_141XP/blob/main/stats141%20comorbidity%20research%20rmd.Rmd">stats141 comorbidity research rmd.Rmd</a> <br/>
 Investigates specific ICD codes for Diabetes/DKA, Cancer/Oncology/Chemotherapy, and Immunosuppresants, and creates a dataframe with two boolian variables "Diabetes" and "Cancer".
 ### Modeling
+
+
+
+### R Package
+<a href="https://github.com/sqliang99/Stats_141XP/blob/main/comorbidity_package.pdf">comorbidity_package.pdf</a> <br/>
+R package used to compute comorbidity/Elixhauser scores (https://github.com/ellessenne/comorbidity/).
