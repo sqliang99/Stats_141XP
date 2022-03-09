@@ -53,10 +53,10 @@ Investigates specific ICD codes for Diabetes/DKA, Cancer/Oncology/Chemotherapy, 
 ### Modeling
 
 
-<a href="https://github.com/sqliang99/Stats_141XP/blob/main/EDA.Rmd">First Models.Rmd</a> <br/>
+<a href="https://github.com/sqliang99/Stats_141XP/blob/main/EDA.Rmd">First_Models.Rmd</a> <br/>
 First few models: GLM, LDA, tree, and random forest.
 
-<a href="https://github.com/sqliang99/Stats_141XP/blob/main/Final_One.Rmd">Final Models.Rmd</a> <br/>
+<a href="https://github.com/sqliang99/Stats_141XP/blob/main/Final_One.Rmd">Final_Models.Rmd</a> <br/>
 Our random forest models and linear models for outcomes other than mortality, done before our final presentation.
 
 ### R Package
