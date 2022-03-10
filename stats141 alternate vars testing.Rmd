@@ -1,0 +1,233 @@
+title: Number of Procedures and CANCER + DIABETES over COMOR Analysis
+author: Original code by {Matthew Mallory}, edited by {Daniel Wray}
+date: {3/9/2022}
+output: pdf_document
+---
+
+### READING THE DATA ###
+
+```{r, warning = F, message = F}
+ds = read.csv("Joined4_NonsenseReplaced.csv")[, -c(1, 2)]
+
+ds7 = read.csv("Joined7_NonsenseReplaced.csv")
+ds$CANCER = ds7[,22]
+ds$DIABETES = ds7[,21]
+ds$I10_NPR = ds7$I10_NPR
+
+d7 = read.csv("Dataset_Replaced.csv")
+library(corrplot)
+library(ROCR)
+library(MASS)
+library(tree)
+library(pROC)
+library(ggplot2)
+library(randomForest)
+```
+
+```{r, out.width = "50%"}
+deaths = character(68)
+deaths = as.factor(ifelse(ds$DIED == 0, "Alive", "Dead"))
+table(deaths)
+plot(deaths)
+```
+
+### Using Both Number of Procedures and Cancer + Diabetes
+
+### GLM
+
+```{r}
+m1 = glm(DIED ~ AGE + FEMALE + RACE + ZIPINC_QRTL + HOSP_REGION + CANCER + DIABETES + I10_NPR, 
+         family = binomial, data = d7)
+summary(m1)
+pred_1 = as.factor(ifelse(predict(m1, d7, type = "response") <= 0.5, "Alive", "Dead"))
+names(pred_1) = NULL
+table_1 = table(pred_1, deaths)
+table(pred_1, deaths)
+table(pred_1, deaths)/68
+sum(table(pred_1, deaths)[c(1,4)])/68
+roc1 = performance(prediction(predict(m1, d7, type ='response'), deaths), "tpr", "fpr")
+plot(roc1, colorize = T, main="ROC Curve for Logistic Regression Model")
+```
+
+### LDA
+
+```{r}
+m2 = lda(DIED ~ AGE + FEMALE + RACE + HOSP_LOCTEACH + HOSP_REGION + CANCER + DIABETES + YEAR + ZIPINC_QRTL + I10_NPR,
+         data = ds)
+pred_2 = predict(m2, newdata = ds)$class
+pred_2 = ifelse(pred_2 == 0, "Alive", "Dead")
+table(pred_2, deaths)
+table(pred_2, deaths)/68
+```
+
+### Tree / Random Forest
+
+```{r}
+m3 = tree(deaths ~ AGE + FEMALE + RACE + HOSP_LOCTEACH + HOSP_REGION + CANCER + DIABETES + YEAR + ZIPINC_QRTL + I10_NPR,
+         data = ds)
+summary(m3)
+pred_3 = predict(m3, data = ds, type = "class")
+table(pred_3, deaths)
+table(pred_3, deaths)/68
+set.seed(1004)
+test_ind = sample(68, 20)
+dsTRAIN = ds[-test_ind, ]
+dsTEST = ds[test_ind, ]
+m4 = randomForest(DIED ~ AGE + FEMALE + RACE + HOSP_REGION + CANCER + DIABETES + YEAR + ZIPINC_QRTL + I10_NPR,
+         data = dsTRAIN, importance = T, mtry = 7)
+pred_4 = predict(m4, newdata = ds, type = "class")
+pred_4[which(pred_4 >= .50)] = "DEAD" 
+pred_4[which(pred_4 < .50)] = "ALIVE" 
+table(pred_4, deaths)
+table(pred_4, deaths)/68
+```
+
+
+### Using only number of procedures
+
+### GLM
+
+```{r}
+m11 = glm(DIED ~ AGE + FEMALE + RACE + ZIPINC_QRTL + HOSP_REGION + COMOR + I10_NPR, 
+         family = binomial, data = d7)
+summary(m11)
+pred_1 = as.factor(ifelse(predict(m11, d7, type = "response") <= 0.5, "Alive", "Dead"))
+names(pred_1) = NULL
+table_1 = table(pred_1, deaths)
+table(pred_1, deaths)
+table(pred_1, deaths)/68
+sum(table(pred_1, deaths)[c(1,4)])/68
+roc1 = performance(prediction(predict(m1, d7, type ='response'), deaths), "tpr", "fpr")
+plot(roc1, colorize = T, main="ROC Curve for Logistic Regression Model")
+```
+
+### LDA
+
+```{r}
+m21 = lda(DIED ~ AGE + FEMALE + RACE + HOSP_LOCTEACH + HOSP_REGION + YEAR + ZIPINC_QRTL + COMOR + I10_NPR,
+         data = ds)
+pred_2 = predict(m21, newdata = ds)$class
+pred_2 = ifelse(pred_2 == 0, "Alive", "Dead")
+table(pred_2, deaths)
+table(pred_2, deaths)/68
+```
+
+### Tree / Random Forest
+
+```{r}
+m31 = tree(deaths ~ AGE + FEMALE + RACE + HOSP_LOCTEACH + HOSP_REGION + YEAR + ZIPINC_QRTL + COMOR + I10_NPR,
+         data = ds)
+summary(m31)
+pred_3 = predict(m31, data = ds, type = "class")
+table(pred_3, deaths)
+table(pred_3, deaths)/68
+set.seed(1004)
+test_ind = sample(68, 20)
+dsTRAIN = ds[-test_ind, ]
+dsTEST = ds[test_ind, ]
+m41 = randomForest(DIED ~ AGE + FEMALE + RACE + HOSP_REGION + YEAR + ZIPINC_QRTL + COMOR + I10_NPR,
+         data = dsTRAIN, importance = T, mtry = 7)
+pred_4 = predict(m41, newdata = ds, type = "class")
+pred_4[which(pred_4 >= .50)] = "DEAD" 
+pred_4[which(pred_4 < .50)] = "ALIVE" 
+table(pred_4, deaths)
+table(pred_4, deaths)/68
+```
+
+
+## Using only COMOR replacement
+
+### GLM
+
+```{r}
+m12 = glm(DIED ~ AGE + FEMALE + RACE + ZIPINC_QRTL + HOSP_REGION + CANCER + DIABETES, 
+         family = binomial, data = d7)
+summary(m11)
+pred_1 = as.factor(ifelse(predict(m12, d7, type = "response") <= 0.5, "Alive", "Dead"))
+names(pred_1) = NULL
+table_1 = table(pred_1, deaths)
+table(pred_1, deaths)
+table(pred_1, deaths)/68
+sum(table(pred_1, deaths)[c(1,4)])/68
+roc1 = performance(prediction(predict(m1, d7, type ='response'), deaths), "tpr", "fpr")
+plot(roc1, colorize = T, main="ROC Curve for Logistic Regression Model")
+```
+
+### LDA
+
+```{r}
+m22 = lda(DIED ~ AGE + FEMALE + RACE + HOSP_LOCTEACH + HOSP_REGION + YEAR + ZIPINC_QRTL + CANCER + DIABETES,
+         data = ds)
+pred_2 = predict(m21, newdata = ds)$class
+pred_2 = ifelse(pred_2 == 0, "Alive", "Dead")
+table(pred_2, deaths)
+table(pred_2, deaths)/68
+```
+
+### Tree / Random Forest
+
+```{r}
+m32 = tree(deaths ~ AGE + FEMALE + RACE + HOSP_LOCTEACH + HOSP_REGION + YEAR + ZIPINC_QRTL + CANCER + DIABETES,
+         data = ds)
+summary(m32)
+pred_3 = predict(m32, data = ds, type = "class")
+table(pred_3, deaths)
+table(pred_3, deaths)/68
+set.seed(1004)
+test_ind = sample(68, 20)
+dsTRAIN = ds[-test_ind, ]
+dsTEST = ds[test_ind, ]
+m42 = randomForest(DIED ~ AGE + FEMALE + RACE + HOSP_REGION + YEAR + ZIPINC_QRTL + CANCER + DIABETES,
+         data = dsTRAIN, importance = T, mtry = 7)
+pred_4 = predict(m42, newdata = ds, type = "class")
+pred_4[which(pred_4 >= .50)] = "DEAD" 
+pred_4[which(pred_4 < .50)] = "ALIVE" 
+table(pred_4, deaths)
+table(pred_4, deaths)/68
+```
+
+```{r}
+## Original models for later comparison
+m10 = glm(DIED ~ AGE + FEMALE + RACE + ZIPINC_QRTL + HOSP_REGION + COMOR, 
+         family = binomial, data = d7)
+m20 = lda(DIED ~ AGE + FEMALE + RACE + HOSP_LOCTEACH + HOSP_REGION + YEAR + ZIPINC_QRTL + CANCER + DIABETES,
+         data = ds)
+m30 = tree(deaths ~ AGE + FEMALE + RACE + HOSP_LOCTEACH + HOSP_REGION + YEAR + ZIPINC_QRTL + COMOR,
+         data = ds)
+m40 = randomForest(DIED ~ AGE + FEMALE + RACE + HOSP_REGION + YEAR + ZIPINC_QRTL + COMOR,
+         data = dsTRAIN, importance = T, mtry = 7)
+
+```
+
+### Comparing the previous models to each other 
+
+Remember that the order is original, using both changes, using just the number of procedures change, and then using just the COMOR change.
+
+```{r}
+summary(m10)
+summary(m1)
+summary(m11)
+summary(m12)
+
+summary(m20)
+summary(m2)
+summary(m21)
+summary(m22)
+
+summary(m30)
+summary(m3)
+summary(m31)
+summary(m32)
+
+importance(m40)
+importance(m4)
+importance(m41)
+importance(m42)
+
+varImpPlot(m40)
+varImpPlot(m4)
+varImpPlot(m41)
+varImpPlot(m42)
+
+```
+
