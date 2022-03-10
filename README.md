@@ -59,6 +59,9 @@ First few models: GLM, LDA, tree, and random forest.
 <a href="https://github.com/sqliang99/Stats_141XP/blob/main/Final_One.Rmd">Final_Models.Rmd</a> <br/>
 Our random forest models and linear models for outcomes other than mortality, done before our final presentation.
 
+<a href="https://github.com/sqliang99/Stats_141XP/blob/main/stats141%20alternate%20vars%20testing.Rmd">stats141 alternate vars testing.Rmd</a> <br/>
+Created models using DIABETES and CANCER instead of COMOR, and/or by using number of procedures as a predictive variable. Then compared the model results to see the difference in significance.
+
 ### R Package
 <a href="https://github.com/sqliang99/Stats_141XP/blob/main/comorbidity_package.pdf">comorbidity_package.pdf</a> <br/>
 R package used to compute comorbidity/Elixhauser scores (https://github.com/ellessenne/comorbidity/).
