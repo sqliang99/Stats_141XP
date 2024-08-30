@@ -1,5 +1,5 @@
 # Stats 141XP: Team 1 Final Project
-This project is for Dr. Rootman as part of UCLA's Stats 141XP.
+This project is for Dr. Rootman as part of Stats 141XP.
 
 The people who worked on this project are: <br/>
 <a href="https://github.com/alee5719">Anna Lee</a> <br/>
